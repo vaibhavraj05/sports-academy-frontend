@@ -16,16 +16,15 @@ export function useAuth() {
 }
 
 function AuthProvider({ children }) {
-  const [auth, setAuth] = useState({});
+  const [auth, setAuth] = useState(getToken() || {});
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
-  function handleAuth(userInfo) {
-    axiosPrivate.defaults.headers.common.Authorization = `Bearer ${userInfo.accessToken}`;
-    setAuth(userInfo);
+  if (auth?.accessToken) {
+    axiosPrivate.defaults.headers.common.Authorization = `Bearer ${auth.accessToken}`;
   }
 
-  const value = useMemo(() => ({ auth, setAuth: handleAuth }), [auth, setAuth]);
+  const value = useMemo(() => ({ auth, setAuth }), [auth, setAuth]);
 
   async function refreshAccessToken() {
     const { refreshToken } = getToken();
@@ -51,7 +50,7 @@ function AuthProvider({ children }) {
   }
 
   async function fetchUserData() {
-    const { accessToken, refreshToken } = getToken() || {};
+    const { accessToken, refreshToken } = auth;
     if (accessToken) {
       try {
         const response = await axiosPrivate.get('/user', {
@@ -60,7 +59,7 @@ function AuthProvider({ children }) {
           }
         });
         const { id, name, email } = response.data.data;
-        handleAuth({ id, name, email, accessToken, refreshToken });
+        setAuth({ id, name, email, accessToken, refreshToken });
       } catch (error) {
         messageApi.error(error?.response?.data?.message);
       }

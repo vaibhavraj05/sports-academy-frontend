@@ -82,13 +82,13 @@ function AppLayout() {
         >
           <div
             className='site-layout-content'
-            style={{ background: colorBgContainer, flex: 1, padding: 10 }}
+            style={{ background: colorBgContainer, flex: 1, padding: 20 }}
           >
             <Outlet />
           </div>
         </Suspense>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Sports Academy ©2023 Created by Team 07</Footer>
+      <Footer style={{ textAlign: 'center' }}>Sports Academy ©2023 Created by Team 7</Footer>
     </Layout>
   );
 }
