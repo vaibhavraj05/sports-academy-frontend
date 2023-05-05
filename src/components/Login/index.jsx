@@ -8,10 +8,6 @@ import { useState } from 'react';
 
 const { Title } = Typography;
 
-// const onFinishFailed = (errorInfo) => {
-//   console.log('Failed:', errorInfo);
-// };
-
 function Login() {
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
@@ -20,7 +16,6 @@ function Login() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const from = location.state?.from?.pathname || '/';
-  console.log('🔥 ~ Login ~ from:', from);
 
   const onFinish = async (values) => {
     setIsLoading(true);
