@@ -1,13 +1,13 @@
 import { lazy } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
-import AppLayout from './Layout';
+import AppLayout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Fallback from './components/Fallback';
 
 import 'antd/dist/reset.css';
 import './App.css';
-import Home from './components/Home';
+import Home from './pages/Home';
 import { useAuth } from './context/AuthProvider';
 
 const Login = lazy(() => import('#/components/Login'));
