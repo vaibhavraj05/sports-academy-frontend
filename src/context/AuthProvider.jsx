@@ -61,7 +61,9 @@ function AuthProvider({ children }) {
         const { id, name, email } = response.data.data;
         setAuth({ id, name, email, accessToken, refreshToken });
       } catch (error) {
-        messageApi.error(error?.response?.data?.message);
+        if (error) {
+          messageApi.error(error?.response?.data?.message);
+        }
       }
     }
   }
@@ -76,6 +78,10 @@ function AuthProvider({ children }) {
           const newAccessToken = await refreshAccessToken(auth.refreshToken);
           prevRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
+        }
+        if (error?.code === 'ERR_NETWORK') {
+          messageApi.error("Couldn't connect to the server. Please try again later");
+          return Promise.reject();
         }
 
         return Promise.reject(error);
