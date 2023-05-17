@@ -42,7 +42,7 @@ export default function Header() {
   return (
     <>
       {contextHolder}
-      <header className='sticky top-0 z-10 p-4 w-full flex items-center justify-between bg-white border-b-2 border-gray-400'>
+      <header className='sticky top-0 z-10 flex w-full items-center justify-between border-b-2 border-gray-400 bg-white p-4'>
         <div className='logo'>
           <Link to='/'>
             <img
@@ -53,9 +53,9 @@ export default function Header() {
           </Link>
         </div>
         <nav>
-          <ul className='flex gap-x-5 items-center mb-0 text-base list-none'>
+          <ul className='mb-0 flex list-none items-center gap-x-5 text-base'>
             {navLinks.map(({ key, label, path }) => (
-              <li>
+              <li key={key}>
                 <NavLink
                   className={({ isActive }) =>
                     `${isActive ? 'border-b-2' : ''} border-blue-500 p-1 text-black `

@@ -13,6 +13,7 @@ import { useAuth } from './context/AuthProvider';
 const Login = lazy(() => import('#/components/Login'));
 const Register = lazy(() => import('#/components/Register'));
 const Browse = lazy(() => import('#/pages/Browse'));
+const CourtDetails = lazy(() => import('#/pages/CourtDetails'));
 
 function App() {
   const navigate = useNavigate();
@@ -26,10 +27,18 @@ function App() {
           <Route index element={<Home />} />
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
-          <Route
-            path='browse'
-            element={<ProtectedRoute isLoggedIn={Boolean(accessToken)} element={<Browse />} />}
-          />
+          <Route path='browse'>
+            <Route
+              index
+              element={<ProtectedRoute isLoggedIn={Boolean(accessToken)} element={<Browse />} />}
+            />
+            <Route
+              path=':courtId'
+              element={
+                <ProtectedRoute isLoggedIn={Boolean(accessToken)} element={<CourtDetails />} />
+              }
+            />
+          </Route>
           <Route path='about' element={<h1>This is About Page</h1>} />
         </Route>
       </Routes>
