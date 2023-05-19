@@ -1,11 +1,12 @@
 import axios from '#/api/axios';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, Typography } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
 function getAllCourts() {
-  return axios.get('admin/courts');
+  return axios.get('court');
 }
 
 export default function Browse() {
@@ -14,6 +15,7 @@ export default function Browse() {
     isLoading,
     isError
   } = useQuery({ queryKey: ['courts'], queryFn: getAllCourts });
+  const navigate = useNavigate();
 
   const courtList = courtData || [...Array(8).keys()];
 
@@ -23,19 +25,25 @@ export default function Browse() {
     <div>
       <Title>Courts</Title>
 
-      <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
+      <div className='grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
         {courtList?.map(({ id, name, image_url: imageUrl, description }, index) => {
           const { length, width } = description || {};
           return (
             <Card
               hoverable
-              cover={<img alt='court' className='object-cover aspect-video' src={imageUrl} />}
-              bodyStyle={{ padding: 15 }}
+              cover={
+                <img
+                  alt='court'
+                  className='aspect-video cursor-default object-cover'
+                  src={imageUrl}
+                />
+              }
+              bodyStyle={{ padding: 15, cursor: 'default' }}
               key={id || index}
               loading={isLoading}
             >
               <Title level={4}>{name}</Title>
-              <div className='flex gap-x-5 mb-5'>
+              <div className='mb-5 flex gap-x-5'>
                 <div>
                   <Text strong>Length: </Text> <Text>{length}</Text>
                 </div>
@@ -43,7 +51,9 @@ export default function Browse() {
                   <Text strong>Width: </Text> <Text>{width}</Text>
                 </div>
               </div>
-              <Button type='primary'>Book Now</Button>
+              <Button type='primary' onClick={() => navigate(id)}>
+                Book Now
+              </Button>
             </Card>
           );
         })}

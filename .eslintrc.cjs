@@ -11,7 +11,8 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
-    'import/no-extraneous-dependencies': 0
+    'import/no-extraneous-dependencies': 0,
+    'no-plusplus': 0
   },
   settings: {
     'import/resolver': {

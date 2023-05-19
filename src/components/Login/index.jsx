@@ -27,7 +27,9 @@ function Login() {
       setAuth({ id, name, email, refreshToken, accessToken });
       navigate(from, { replace: true });
     } catch (error) {
-      messageApi.error(error?.response?.data?.message);
+      if (error) {
+        messageApi.error(error?.response?.data?.message);
+      }
     } finally {
       setIsLoading(false);
     }
