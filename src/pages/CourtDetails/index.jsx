@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 const dateFormat = 'YYYY-MM-DD';
 const padZero = (number) => number.toString().padStart(2, '0');
 
-function fetchCourtDetailsAndBookedSlots({ queryKey }) {
+function fetchCourtDetailsOrBookedSlots({ queryKey }) {
   const [, courtId, date] = queryKey;
   const params = {
     date: date?.format(dateFormat) || null
@@ -72,12 +72,12 @@ export default function CourtDetails() {
     data: courtDetails,
     isLoading,
     isError
-  } = useQuery(['courtId', courtId], fetchCourtDetailsAndBookedSlots);
+  } = useQuery(['courtId', courtId], fetchCourtDetailsOrBookedSlots);
   const { name, imageUrl, description, count, bookings: todayBookings } = courtDetails || {};
 
   const { data: bookedSlots, isLoading: isBookSlotLoading } = useQuery(
     ['slot', courtId, bookingDate],
-    fetchCourtDetailsAndBookedSlots,
+    fetchCourtDetailsOrBookedSlots,
     {
       enabled: fetchBookedSlot,
       onError: () => messageApi.warning('There was an error while fetching the slots')
