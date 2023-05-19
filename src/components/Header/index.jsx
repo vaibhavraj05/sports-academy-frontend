@@ -16,9 +16,9 @@ const navLinks = [
     path: '/browse'
   },
   {
-    key: 'about',
-    label: 'About',
-    path: '/about'
+    key: 'bookings',
+    label: 'Bookings',
+    path: '/bookings'
   }
 ];
 

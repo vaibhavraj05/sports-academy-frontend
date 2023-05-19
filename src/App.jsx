@@ -14,12 +14,15 @@ const Login = lazy(() => import('#/components/Login'));
 const Register = lazy(() => import('#/components/Register'));
 const Browse = lazy(() => import('#/pages/Browse'));
 const CourtDetails = lazy(() => import('#/pages/CourtDetails'));
+const Bookings = lazy(() => import('#/pages/Bookings'));
 
 function App() {
   const navigate = useNavigate();
   const {
     auth: { accessToken }
   } = useAuth();
+  const isLoggedIn = Boolean(accessToken);
+
   return (
     <ErrorBoundary FallbackComponent={Fallback} onReset={() => navigate('/')}>
       <Routes>
@@ -30,16 +33,17 @@ function App() {
           <Route path='browse'>
             <Route
               index
-              element={<ProtectedRoute isLoggedIn={Boolean(accessToken)} element={<Browse />} />}
+              element={<ProtectedRoute isLoggedIn={isLoggedIn} element={<Browse />} />}
             />
             <Route
               path=':courtId'
-              element={
-                <ProtectedRoute isLoggedIn={Boolean(accessToken)} element={<CourtDetails />} />
-              }
+              element={<ProtectedRoute isLoggedIn={isLoggedIn} element={<CourtDetails />} />}
             />
           </Route>
-          <Route path='about' element={<h1>This is About Page</h1>} />
+          <Route
+            path='bookings'
+            element={<ProtectedRoute isLoggedIn={isLoggedIn} element={<Bookings />} />}
+          />
         </Route>
       </Routes>
     </ErrorBoundary>
