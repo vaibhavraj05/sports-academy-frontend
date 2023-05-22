@@ -36,6 +36,7 @@ export default function Header() {
       await axios.post('user/logout');
       setAuth({});
       removeToken();
+      navigate('/', { replace: true });
       messageApi.success('Logout successful');
     } catch (error) {
       messageApi.error('Logout Failed. Please try again');
