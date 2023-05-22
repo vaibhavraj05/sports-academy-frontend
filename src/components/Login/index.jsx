@@ -2,7 +2,7 @@ import { Button, Card, Form, Input, Spin, Typography, message } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useAuth } from '#/context/AuthProvider';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import axios from '#/api/axios';
+import axios from 'axios';
 import { setToken } from '#/helpers/token';
 import { useState } from 'react';
 
@@ -16,11 +16,12 @@ function Login() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const from = location.state?.from?.pathname || '/';
+  const baseUrl = import.meta.env.VITE_BASE_URL;
 
   const onFinish = async (values) => {
     setIsLoading(true);
     try {
-      const response = await axios.post('/user/login', values);
+      const response = await axios.post(`${baseUrl}/user/login`, values);
       const { id, name, email, tokens } = response.data.data;
       const { refreshToken, accessToken } = tokens;
       setToken(tokens);
