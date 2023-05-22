@@ -10,8 +10,8 @@ import './App.css';
 import Home from './pages/Home';
 import { useAuth } from './context/AuthProvider';
 
-const Login = lazy(() => import('#/components/Login'));
-const Register = lazy(() => import('#/components/Register'));
+const Login = lazy(() => import('#/pages/Login'));
+const Register = lazy(() => import('#/pages/Register'));
 const Browse = lazy(() => import('#/pages/Browse'));
 const CourtDetails = lazy(() => import('#/pages/CourtDetails'));
 const Bookings = lazy(() => import('#/pages/Bookings'));
