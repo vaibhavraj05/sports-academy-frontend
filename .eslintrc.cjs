@@ -12,7 +12,14 @@ module.exports = {
   plugins: ['react'],
   rules: {
     'import/no-extraneous-dependencies': 0,
-    'no-plusplus': 0
+    'no-plusplus': 0,
+    'react/require-default-props': [
+      2,
+      {
+        forbidDefaultForRequired: true,
+        functions: 'defaultArguments'
+      }
+    ]
   },
   settings: {
     'import/resolver': {

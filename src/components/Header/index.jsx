@@ -16,9 +16,9 @@ const navLinks = [
     path: '/browse'
   },
   {
-    key: 'about',
-    label: 'About',
-    path: '/about'
+    key: 'bookings',
+    label: 'Bookings',
+    path: '/bookings'
   }
 ];
 
@@ -26,6 +26,9 @@ export default function Header() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const { auth, setAuth } = useAuth();
+  const { accessToken, name, email } = auth || {};
+  const firstName = name?.split(' ')[0];
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -69,8 +72,11 @@ export default function Header() {
             ))}
           </ul>
         </nav>
-        <div className='flex gap-x-3'>
-          {auth?.accessToken ? (
+        <div className='flex items-center gap-x-3'>
+          <p title={email} className='text-base font-medium text-sky-700 underline'>
+            {firstName}
+          </p>
+          {accessToken ? (
             <Button type='primary' onClick={handleLogout}>
               Logout
             </Button>

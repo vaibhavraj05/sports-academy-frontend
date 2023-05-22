@@ -12,14 +12,12 @@ function AppLayout() {
       <Content style={{ padding: '10px 10px 0', display: 'flex', flexDirection: 'column' }}>
         <Suspense
           fallback={
-            <div className='h-full bg-white flex-1 grid place-items-center'>
+            <div className='grid h-full flex-1 place-items-center bg-white'>
               <Spin size='large' tip='Loading' />
             </div>
           }
         >
-          <div className='bg-white flex-1 p-5'>
-            <Outlet />
-          </div>
+          <Outlet />
         </Suspense>
       </Content>
       <Footer style={{ textAlign: 'center' }}>Sports Academy ©2023 Created by Team 7</Footer>
