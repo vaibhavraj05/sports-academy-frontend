@@ -20,7 +20,12 @@ export default function Browse() {
 
   const courtList = courtData || [...Array(8).keys()];
 
-  if (isError) return <ServiceUnavailable />;
+  if (isError)
+    return (
+      <Container>
+        <ServiceUnavailable />
+      </Container>
+    );
 
   return (
     <Container>

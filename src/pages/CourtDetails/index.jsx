@@ -133,7 +133,12 @@ export default function CourtDetails() {
     );
   }
 
-  if (isError) return <ServiceUnavailable />;
+  if (isError)
+    return (
+      <Container>
+        <ServiceUnavailable />
+      </Container>
+    );
 
   return (
     <>

@@ -5,7 +5,11 @@ function Container({ className = '', children }) {
 }
 
 function ServiceUnavailable() {
-  return <h1 className=' text-3xl font-bold'>Service Unavailable. Please try again later</h1>;
+  return (
+    <h1 className=' mt-5 text-center text-3xl font-bold text-orange-400 drop-shadow-md'>
+      Service Unavailable. Please try again later
+    </h1>
+  );
 }
 
 Container.propTypes = {
