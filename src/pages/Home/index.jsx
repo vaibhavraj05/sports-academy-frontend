@@ -1,3 +1,5 @@
+import { Container } from '#/components/Common';
+
 export default function Home() {
-  return <div>This is home page</div>;
+  return <Container>This is home page</Container>;
 }

@@ -1,4 +1,5 @@
 import axios from '#/api/axios';
+import { Container, ServiceUnavailable } from '#/components/Common';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -19,10 +20,10 @@ export default function Browse() {
 
   const courtList = courtData || [...Array(8).keys()];
 
-  if (isError) return <Title>Service Unavailable</Title>;
+  if (isError) return <ServiceUnavailable />;
 
   return (
-    <div>
+    <Container>
       <Title>Courts</Title>
 
       <div className='grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
@@ -58,6 +59,6 @@ export default function Browse() {
           );
         })}
       </div>
-    </div>
+    </Container>
   );
 }

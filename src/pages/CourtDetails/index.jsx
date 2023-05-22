@@ -5,6 +5,7 @@ import { Button, DatePicker, Skeleton, Spin, message } from 'antd';
 import shortid from 'shortid';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { Container, ServiceUnavailable } from '#/components/Common';
 
 const dateFormat = 'YYYY-MM-DD';
 const padZero = (number) => number.toString().padStart(2, '0');
@@ -132,14 +133,12 @@ export default function CourtDetails() {
     );
   }
 
-  if (isError) {
-    return <h1 className=' text-3xl font-bold'>Service Unavailable. Please try again later</h1>;
-  }
+  if (isError) return <ServiceUnavailable />;
 
   return (
     <>
       {contextHolder}
-      <div className='grid grid-cols-6 gap-x-5'>
+      <Container className='grid grid-cols-6 gap-x-5'>
         <img
           src={imageUrl}
           alt={name}
@@ -205,7 +204,7 @@ export default function CourtDetails() {
             </Spin>
           </div>
         </div>
-      </div>
+      </Container>
     </>
   );
 }
