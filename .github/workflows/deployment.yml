@@ -33,7 +33,7 @@ jobs:
       run: npm install
 
     - name: setting new values
-      run: echo "VITE_BASE_URL=${{ secrets.API_URL }}" > .env
+      run: echo VITE_BASE_URL=${{ secrets.API_URL }} > .env
 
     - name: Builing the application
       run: npm run build
