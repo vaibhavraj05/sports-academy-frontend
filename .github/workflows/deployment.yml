@@ -1,0 +1,43 @@
+name: Android Build Yocharge Prod
+on:
+  push:
+    branches: ['staging']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    # Steps to run 
+    steps:    
+    # checkout of the git branch
+    - uses: actions/checkout@v3
+
+
+    - name: Set up Node.js 16.17.0
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.17.0
+        cache: 'npm'
+
+    # Setting the aws cred to access s3 and secret manager 
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+      
+    # Installing node modules
+    - name: Node modules  
+      run: npm install
+
+    - name: Builing the application
+      run: npm run build
+
+    - name: Pushing content to s3
+      run: |
+         set +x; aws s3 sync ./dist s3://${{ secrets.BUCKET_NAME }}
+         INVALIDATION_ID=$(set +x; aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUD_FRONT_ID }} --paths "/*" | jq -r ".Invalidation.Id")
+         set +x; aws cloudfront wait invalidation-completed --distribution-id ${{ secrets.CLOUD_FRONT_ID }} --id $INVALIDATION_ID
+
