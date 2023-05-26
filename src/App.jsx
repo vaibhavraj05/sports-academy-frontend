@@ -9,7 +9,9 @@ import 'antd/dist/reset.css';
 import './App.css';
 import Home from './pages/Home';
 import { useAuth } from './context/AuthProvider';
-import AdminLayout from './pages/Admin';
+import AdminLayout from './components/AdminLayout';
+import AdminHome from './pages/AdminHome';
+import CreateCourt from './pages/CreateCourt';
 
 const Login = lazy(() => import('#/pages/Login'));
 const Register = lazy(() => import('#/pages/Register'));
@@ -57,7 +59,10 @@ function App() {
               element={<AdminLayout />}
             />
           }
-        />
+        >
+          <Route index element={<AdminHome />} />
+          <Route path='create' element={<CreateCourt />} />
+        </Route>
       </Routes>
     </ErrorBoundary>
   );
