@@ -33,6 +33,7 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
   });
 
   function handleFinish(value) {
+    console.log('🚀 ~ file: index.jsx:36 ~ handleFinish ~ value:', value);
     const { name, description, count, capacity, image } = value;
     const data = {
       name,
@@ -93,8 +94,8 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
           </Form.Item>
 
           <Form.Item
-            name='upload'
-            label='Upload'
+            name='image'
+            label='Image Upload'
             valuePropName='fileList'
             getValueFromEvent={normFile}
           >
