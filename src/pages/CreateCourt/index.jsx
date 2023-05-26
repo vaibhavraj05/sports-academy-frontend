@@ -5,9 +5,10 @@ import { useMutation } from '@tanstack/react-query';
 import { Button, Form, Input, InputNumber, Modal, Space, Upload, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import shortid from 'shortid';
 
 const normFile = (e) => {
-  console.log('Upload event:', e);
   if (Array.isArray(e)) {
     return e;
   }
@@ -18,13 +19,36 @@ function createCourtApi(value) {
   return axios.post('court', value);
 }
 
-export default function CreateCourt({ open, onCancel: handleCancel }) {
+function updateCourtApi(id, data) {
+  return axios.put(`court/${id}`, data);
+}
+
+function getImage(url, name) {
+  return [{ uid: shortid.generate(), name, url }];
+}
+
+export default function CourtForm({
+  open,
+  onCancel: handleCancel,
+  defaultValues,
+  action = 'create'
+}) {
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
 
   const { mutate: createCourt } = useMutation(createCourtApi, {
     onSuccess: () => {
       messageApi.open({ type: 'success', content: 'Entry added successfully' });
+    },
+    onError: (error) => {
+      const { path, message } = error.response.data.error.details.errors[0];
+      messageApi.open({ type: 'error', content: `${path[0]}: ${message.toLowerCase()}` });
+    }
+  });
+
+  const { mutate: updateCourt } = useMutation(updateCourtApi, {
+    onSuccess: () => {
+      messageApi.open({ type: 'success', content: 'Entry updated successfully' });
     },
     onError: (error) => {
       const { path, message } = error.response.data.error.details.errors[0];
@@ -51,16 +75,33 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
       formData.append('file', null);
     }
     formData.append('data', JSON.stringify(data));
-    createCourt(formData);
+
+    if (action === 'create') {
+      createCourt(formData);
+    } else {
+      updateCourt(defaultValues.id, formData);
+    }
   }
+
+  useEffect(() => {
+    const { description, image_url: imageUrl, name } = defaultValues;
+    if (!Object.keys(defaultValues).length) form.resetFields();
+    else {
+      form.setFieldsValue({
+        ...defaultValues,
+        description: JSON.stringify(description),
+        image: getImage(imageUrl, name)
+      });
+    }
+  }, [defaultValues]);
 
   return (
     <>
       {contextHolder}
       <Modal
         open={open}
-        title='Create a new collection'
-        okText='Create'
+        title={`${action === 'create' ? 'Create a new court' : 'Update court'}`}
+        okText={action === 'create' ? 'Create' : 'Update'}
         cancelText='Cancel'
         onCancel={handleCancel}
         onOk={() => {
@@ -68,7 +109,7 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
             .validateFields()
             .then((values) => {
               handleFinish(values);
-              // form.resetFields();
+              if (action === 'create') form.resetFields();
             })
             .catch((info) => {
               console.log('Validate Failed:', info);
@@ -77,14 +118,14 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
       >
         <Form form={form} layout='vertical'>
           <Form.Item name='name' label='Name'>
-            <Input />
+            <Input name='name' />
           </Form.Item>
           <Space.Compact block>
             <Form.Item name='capacity' label='Capacity'>
-              <InputNumber min={1} max={20} defaultValue={4} />
+              <InputNumber min={1} max={20} />
             </Form.Item>
-            <Form.Item name='court-count' label='Number of courts'>
-              <InputNumber min={1} defaultValue={1} />
+            <Form.Item name='count' label='Number of courts'>
+              <InputNumber min={1} />
             </Form.Item>
           </Space.Compact>
 
@@ -98,7 +139,13 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
             valuePropName='fileList'
             getValueFromEvent={normFile}
           >
-            <Upload name='logo' beforeUpload={() => false} listType='picture' maxCount={1}>
+            <Upload
+              name='logo'
+              beforeUpload={() => false}
+              defaultFileList={[]}
+              listType='picture'
+              maxCount={1}
+            >
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
           </Form.Item>
@@ -108,7 +155,10 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
   );
 }
 
-CreateCourt.propTypes = {
+CourtForm.propTypes = {
   open: PropTypes.bool.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  defaultValues: PropTypes.object.isRequired,
+  action: PropTypes.string
 };

@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Col, Image, Popconfirm, Row, Space, Table, Typography } from 'antd';
 import { useState } from 'react';
 import shortid from 'shortid';
-import CreateCourt from '../CreateCourt';
+import CourtForm from '../CreateCourt';
 
 const { Title, Text } = Typography;
 
@@ -18,6 +18,8 @@ function deleteCourtApi(courtId) {
 
 export default function AdminHome() {
   const [openModal, setOpenModal] = useState(false);
+  const [defaultFormValues, setDefaultFormValues] = useState({});
+  const [courtAction, setCourtAction] = useState('create');
 
   const {
     data: courtData,
@@ -28,6 +30,18 @@ export default function AdminHome() {
   const { mutate: deleteCourt } = useMutation(deleteCourtApi, {
     onSuccess: refetchCourts
   });
+
+  const handleEditClick = (value) => {
+    setDefaultFormValues(value);
+    setCourtAction('update');
+    setOpenModal(true);
+  };
+
+  const handleCreateClick = () => {
+    setDefaultFormValues({});
+    setCourtAction('create');
+    setOpenModal(true);
+  };
 
   const columns = [
     {
@@ -70,27 +84,30 @@ export default function AdminHome() {
       title: 'Action',
       dataIndex: 'Action',
       key: 'action',
-      render: (_, { id }) => (
-        <Space>
-          <Popconfirm
-            title='Delete the entry'
-            description='Are you sure to delete this entry?'
-            onConfirm={() => {
-              deleteCourt(id);
-            }}
-            okText='Yes'
-            cancelText='No'
-            placement='left'
-          >
-            <Button type='text' danger size='small'>
-              <DeleteOutlined />
+      render: (_, value) => {
+        const { id } = value;
+        return (
+          <Space>
+            <Popconfirm
+              title='Delete the entry'
+              description='Are you sure to delete this entry?'
+              onConfirm={() => {
+                deleteCourt(id);
+              }}
+              okText='Yes'
+              cancelText='No'
+              placement='left'
+            >
+              <Button type='text' danger size='small'>
+                <DeleteOutlined />
+              </Button>
+            </Popconfirm>
+            <Button type='text' size='small' onClick={() => handleEditClick(value)}>
+              <EditOutlined />
             </Button>
-          </Popconfirm>
-          <Button type='text' size='small'>
-            <EditOutlined />
-          </Button>
-        </Space>
-      )
+          </Space>
+        );
+      }
     }
   ];
 
@@ -102,13 +119,18 @@ export default function AdminHome() {
       <Text type='secondary'>{courtData?.length} entries found</Text>
       <Row justify='end'>
         <Col>
-          <Button type='primary' icon={<PlusOutlined />} onClick={() => setOpenModal(true)}>
+          <Button type='primary' icon={<PlusOutlined />} onClick={handleCreateClick}>
             Create new entry
           </Button>
         </Col>
       </Row>
       <Table columns={columns} dataSource={courtData} loading={isLoading} />
-      <CreateCourt open={openModal} onCancle={() => setOpenModal(false)} />
+      <CourtForm
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        defaultValues={defaultFormValues}
+        action={courtAction}
+      />
     </div>
   );
 }
