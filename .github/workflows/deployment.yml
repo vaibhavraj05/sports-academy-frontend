@@ -1,4 +1,4 @@
-name: Android Build Yocharge Prod
+name: Sports Academy Frontend
 on:
   push:
     branches: ['staging']
@@ -31,6 +31,9 @@ jobs:
     # Installing node modules
     - name: Node modules  
       run: npm install
+
+    - name: setting new values
+      run: echo "VITE_BASE_URL=${{ secrets.API_URL }}" > .env
 
     - name: Builing the application
       run: npm run build
