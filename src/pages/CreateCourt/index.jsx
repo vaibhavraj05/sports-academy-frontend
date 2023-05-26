@@ -33,11 +33,10 @@ export default function CreateCourt({ open, onCancel: handleCancel }) {
   });
 
   function handleFinish(value) {
-    console.log('🚀 ~ file: index.jsx:36 ~ handleFinish ~ value:', value);
     const { name, description, count, capacity, image } = value;
     const data = {
       name,
-      description: JSON.stringify(description),
+      description: JSON.parse(description),
       count,
       capacity
     };
