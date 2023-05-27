@@ -19,7 +19,7 @@ function createCourtApi(value) {
   return axios.post('court', value);
 }
 
-function updateCourtApi(id, data) {
+function updateCourtApi({ id, data }) {
   return axios.put(`court/${id}`, data);
 }
 
@@ -79,7 +79,7 @@ export default function CourtForm({
     if (action === 'create') {
       createCourt(formData);
     } else {
-      updateCourt(defaultValues.id, formData);
+      updateCourt({ id: defaultValues.id, data: formData });
     }
   }
 
