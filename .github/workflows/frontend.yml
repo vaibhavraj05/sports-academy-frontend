@@ -12,6 +12,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: setting new values
+        run: echo VITE_BASE_URL=${{ secrets.VITE_BASE_URL }} > .env
+        
       - name: Build the Docker image
         run: docker build -t vaibhavrajnathchauhan/sports-academy-frontend:${{ github.run_number }} .
       - name: Pushing docker images
