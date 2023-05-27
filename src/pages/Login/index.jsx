@@ -23,10 +23,10 @@ function Login() {
     setIsLoading(true);
     try {
       const response = await axios.post(`${baseUrl}/user/login`, values);
-      const { id, name, email, tokens } = response.data.data;
+      const { id, name, email, tokens, role } = response.data.data;
       const { refreshToken, accessToken } = tokens;
       setToken(tokens);
-      setAuth({ id, name, email, refreshToken, accessToken });
+      setAuth({ id, name, email, role, refreshToken, accessToken });
       navigate(from, { replace: true });
     } catch (error) {
       if (error) {

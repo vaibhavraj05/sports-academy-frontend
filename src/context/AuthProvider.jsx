@@ -17,6 +17,7 @@ export function useAuth() {
 
 function AuthProvider({ children }) {
   const [auth, setAuth] = useState(getToken() || {});
+  const [isLoading, setIsLoading] = useState('true');
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ function AuthProvider({ children }) {
     axiosPrivate.defaults.headers.common.Authorization = `Bearer ${auth.accessToken}`;
   }
 
-  const value = useMemo(() => ({ auth, setAuth }), [auth, setAuth]);
+  const value = useMemo(() => ({ auth, setAuth, isLoading }), [auth, setAuth, isLoading]);
 
   async function refreshAccessToken() {
     const { refreshToken } = getToken();
@@ -58,14 +59,16 @@ function AuthProvider({ children }) {
             Authorization: `Bearer ${accessToken}`
           }
         });
-        const { id, name, email } = response.data.data;
-        setAuth({ id, name, email, accessToken, refreshToken });
+        const { id, name, email, role } = response.data.data;
+        setAuth({ id, name, email, role, accessToken, refreshToken });
       } catch (error) {
         if (error) {
           messageApi.error(error?.response?.data?.message);
         }
       }
     }
+
+    setIsLoading(false);
   }
 
   useEffect(() => {

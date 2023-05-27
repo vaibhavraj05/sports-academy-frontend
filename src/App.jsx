@@ -9,6 +9,8 @@ import 'antd/dist/reset.css';
 import './App.css';
 import Home from './pages/Home';
 import { useAuth } from './context/AuthProvider';
+import AdminLayout from './components/AdminLayout';
+import AdminHome from './pages/AdminHome';
 
 const Login = lazy(() => import('#/pages/Login'));
 const Register = lazy(() => import('#/pages/Register'));
@@ -18,10 +20,11 @@ const Bookings = lazy(() => import('#/pages/Bookings'));
 
 function App() {
   const navigate = useNavigate();
-  const {
-    auth: { accessToken }
-  } = useAuth();
+  const { auth, isLoading } = useAuth();
+  const { accessToken, role } = auth;
   const isLoggedIn = Boolean(accessToken);
+
+  if (isLoading) return null;
 
   return (
     <ErrorBoundary FallbackComponent={Fallback} onReset={() => navigate('/')}>
@@ -33,17 +36,30 @@ function App() {
           <Route path='browse'>
             <Route
               index
-              element={<ProtectedRoute isLoggedIn={isLoggedIn} element={<Browse />} />}
+              element={<ProtectedRoute isAuthenticated={isLoggedIn} element={<Browse />} />}
             />
             <Route
               path=':courtId'
-              element={<ProtectedRoute isLoggedIn={isLoggedIn} element={<CourtDetails />} />}
+              element={<ProtectedRoute isAuthenticated={isLoggedIn} element={<CourtDetails />} />}
             />
           </Route>
           <Route
             path='bookings'
-            element={<ProtectedRoute isLoggedIn={isLoggedIn} element={<Bookings />} />}
+            element={<ProtectedRoute isAuthenticated={isLoggedIn} element={<Bookings />} />}
           />
+        </Route>
+
+        <Route
+          path='/admin'
+          element={
+            <ProtectedRoute
+              isAuthenticated={isLoggedIn}
+              isAuthorized={role === 'admin'}
+              element={<AdminLayout />}
+            />
+          }
+        >
+          <Route index element={<AdminHome />} />
         </Route>
       </Routes>
     </ErrorBoundary>
